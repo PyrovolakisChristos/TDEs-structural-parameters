@@ -14,6 +14,7 @@
     .band-toggle { margin-bottom: 14px; display:flex; gap:8px; }
     .band-toggle button { padding: 8px 12px; border-radius:6px; border:1px solid #ccc; background: #fff; cursor:pointer; }
     .band-toggle button.active { background:#2c3e50; color:#fff; border-color:#2c3e50; }
+    .hide-col { display:none; }
     .search-box input { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; }
     .search-box button { padding: 10px 20px; background: #2c3e50; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; }
     .search-box button:hover { background: #34495e; }
@@ -94,6 +95,9 @@
       document.getElementById('btn-all').classList.toggle('active', band === 'all');
       document.getElementById('btn-r').classList.toggle('active', band === 'r');
       document.getElementById('btn-g').classList.toggle('active', band === 'g');
+      // hide Band column when viewing a single band
+      const firstTh = document.querySelector('thead tr').children[0];
+      if (firstTh) firstTh.classList.toggle('hide-col', band !== 'all');
       applyFilters();
     }
 
@@ -156,22 +160,30 @@
 
       displayedData.forEach(row => {
         const tr = document.createElement('tr');
-        row.forEach((cell, i) => {
-          const td = document.createElement('td');
-          td.textContent = cell;
-          if (i === 0) {
-            td.className = cell === 'r' ? 'band-r' : 'band-g';
+        if (filterBand === 'all') {
+          // render band cell first
+          row.forEach((cell, i) => {
+            const td = document.createElement('td');
+            td.textContent = cell;
+            if (i === 0) td.className = cell === 'r' ? 'band-r' : 'band-g';
+            tr.appendChild(td);
+          });
+        } else {
+          // skip band cell (row[0]) and render only data columns
+          for (let i = 1; i < row.length; i++) {
+            const td = document.createElement('td');
+            td.textContent = row[i];
+            tr.appendChild(td);
           }
-          tr.appendChild(td);
-        });
+        }
         tbody.appendChild(tr);
       });
       updateStats();
     }
 
     document.getElementById('searchInput').addEventListener('keyup', search);
-    // initialize
-    switchBand('all');
+    // initialize: default to r-band single view
+    switchBand('r');
   </script>
 </body>
 </html>
