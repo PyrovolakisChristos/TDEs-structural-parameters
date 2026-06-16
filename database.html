@@ -105,6 +105,48 @@
     
     // We'll render two separate tables and toggle visibility
     let currentVisible = 'r'; // 'r' or 'g'
+    const sortConfig = {
+      r: { key: 0, asc: true },
+      g: { key: 0, asc: true }
+    };
+    const numericColumns = new Set([2, 3, 4, 5, 6, 7, 8, 9, 10]);
+
+    function getSortableValue(cell, index) {
+      const text = String(cell ?? '').trim();
+      if (text === '' || text === '--') return { num: NaN, text: '' };
+      if (numericColumns.has(index)) {
+        const num = parseFloat(text.replace(/±.*$/, '').replace(/,/g, ''));
+        return { num, text };
+      }
+      return { num: NaN, text };
+    }
+
+    function compareRows(a, b, index, asc) {
+      const aValue = getSortableValue(a[index], index);
+      const bValue = getSortableValue(b[index], index);
+      if (!Number.isNaN(aValue.num) && !Number.isNaN(bValue.num)) {
+        return asc ? aValue.num - bValue.num : bValue.num - aValue.num;
+      }
+      const aText = String(aValue.text || a[index] || '').toLowerCase();
+      const bText = String(bValue.text || b[index] || '').toLowerCase();
+      return asc ? aText.localeCompare(bText) : bText.localeCompare(aText);
+    }
+
+    function sortByR(index) {
+      const config = sortConfig.r;
+      config.asc = config.key === index ? !config.asc : true;
+      config.key = index;
+      rData.sort((a, b) => compareRows(a, b, index, config.asc));
+      renderR();
+    }
+
+    function sortByG(index) {
+      const config = sortConfig.g;
+      config.asc = config.key === index ? !config.asc : true;
+      config.key = index;
+      gData.sort((a, b) => compareRows(a, b, index, config.asc));
+      renderG();
+    }
 
     function showBand(band, replaceURL = true) {
       currentVisible = band;
