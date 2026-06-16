@@ -1,29 +1,18 @@
 # TDEs-structural-parameters
 We obtain all the structural parameters of the TDE sample in the cases where a reliable model was obtained and we showcase them in this table for each and every TDE derived from TDECat
 
+## Quick Start
 
-## Usage
+Open [index.html](https://github.com/PyrovolakisChristos/TDEs-structural-parameters/blob/main/index.html) in your browser and click on either dataset:
 
-The working dataset pages are `r.html` and `g.html`.
+- **r-band**: [r.html](https://raw.githubusercontent.com/PyrovolakisChristos/TDEs-structural-parameters/main/r.html)
+- **g-band**: [g.html](https://raw.githubusercontent.com/PyrovolakisChristos/TDEs-structural-parameters/main/g.html)
 
-- [Open `r.html`](r.html) to view the r-band dataset.
-- [Open `g.html`](g.html) to view the g-band dataset.
-- The CSV files are also available at `data/r_band.csv` and `data/g_band.csv`.
+To open from another computer, download the repository or use it directly from GitHub by opening the raw files in your browser.
 
-If you prefer, you can still start a local server from this folder and open `http://localhost:8000/`:
+## CSV Data
 
-```bash
-python3 -m http.server 8000
-```
-
-## Live preview from GitHub
-GitHub does not render HTML pages directly in the repository file browser. To open the working pages from another laptop, use one of these preview URLs:
-
-- https://htmlpreview.github.io/?https://raw.githubusercontent.com/PyrovolakisChristos/TDEs-structural-parameters/main/r.html
-- https://htmlpreview.github.io/?https://raw.githubusercontent.com/PyrovolakisChristos/TDEs-structural-parameters/main/g.html
-- https://raw.githack.com/PyrovolakisChristos/TDEs-structural-parameters/main/r.html
-- https://raw.githack.com/PyrovolakisChristos/TDEs-structural-parameters/main/g.html
-
-> Use `r.html` and `g.html` directly for the correct table views. `all.html` is not required for the standard dataset browsing workflow.
+- [r_band.csv](data/r_band.csv)
+- [g_band.csv](data/g_band.csv)
 
 Open one of those links in a browser to see the rendered database page without downloading anything.

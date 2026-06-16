@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TDE Structural Parameters — r-band</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); min-height:100vh; padding:20px; }
+    .container { max-width:1400px; margin:0 auto; background:white; border-radius:12px; box-shadow:0 10px 40px rgba(0,0,0,.2); padding:30px; }
+    header { text-align:center; margin-bottom:30px; border-bottom:2px solid #667eea; padding-bottom:20px; }
+    header h1 { color:#333; font-size:2.5em; margin-bottom:10px; }
+    header p { color:#666; font-size:1.1em; }
+    .controls { display:flex; gap:15px; margin-bottom:25px; flex-wrap:wrap; align-items:center; }
+    .search-box { flex:1; min-width:250px; }
+    .search-box input { width:100%; padding:12px 15px; border:2px solid #ddd; border-radius:6px; font-size:1em; transition:border-color .3s; }
+    .search-box input:focus { outline:none; border-color:#667eea; box-shadow:0 0 0 3px rgba(102,126,234,.1); }
+    .button-group { display:flex; gap:10px; }
+    button { padding:11px 20px; border:none; border-radius:6px; font-size:1em; font-weight:600; cursor:pointer; transition:all .3s; display:flex; align-items:center; gap:8px; }
+    .btn-download { background:#22c55e; color:white; }
+    .btn-download:hover { background:#16a34a; transform:translateY(-2px); box-shadow:0 5px 15px rgba(34,197,94,.3); }
+    .btn-reset { background:#64748b; color:white; }
+    .btn-reset:hover { background:#475569; transform:translateY(-2px); box-shadow:0 5px 15px rgba(100,116,139,.3); }
+    .table-wrapper { overflow-x:auto; border-radius:8px; border:1px solid #e0e0e0; }
+    table { width:100%; border-collapse:collapse; font-size:.95em; }
+    thead { background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); color:white; position:sticky; top:0; z-index:10; }
+    th { padding:15px 12px; text-align:left; font-weight:600; cursor:pointer; user-select:none; white-space:nowrap; position:relative; }
+    th:hover { background:rgba(0,0,0,.1); }
+    th.sortable::after { content:' ↕'; opacity:.5; }
+    th.sorted-asc::after { content:' ↑'; opacity:1; }
+    th.sorted-desc::after { content:' ↓'; opacity:1; }
+    tbody tr { border-bottom:1px solid #e0e0e0; transition:background-color .2s; }
+    tbody tr:hover { background-color:#f8f9fa; }
+    tbody tr:nth-child(even) { background-color:#f9fafb; }
+    td { padding:12px; color:#333; }
+    td.galaxy-name { font-weight:600; color:#667eea; }
+    .info-box { margin-bottom:20px; padding:15px; background:#f0f9ff; border-left:4px solid #667eea; border-radius:4px; color:#333; }
+    .stats { display:flex; gap:20px; margin-bottom:20px; flex-wrap:wrap; }
+    .stat-card { padding:15px 20px; background:#f3f4f6; border-radius:8px; border-left:4px solid #667eea; }
+    .stat-card strong { display:block; font-size:1.5em; color:#667eea; margin-top:5px; }
+    .stat-card label { display:block; color:#666; font-size:.9em; }
+    .no-results { text-align:center; padding:40px; color:#999; font-size:1.1em; }
+    .tabs { display:flex; gap:10px; margin-bottom:20px; border-bottom:2px solid #ddd; }
+    .tab-button { padding:12px 20px; background:#f0f0f0; border:none; border-bottom:3px solid transparent; cursor:pointer; font-weight:600; color:#666; transition:all .3s; }
+    .tab-button.active { background:white; color:#667eea; border-bottom-color:#667eea; }
+    .tab-button:hover { background:white; }
+    .tab-content { display:none; }
+    .tab-content.active { display:block; }
+    .warning-badge { display:inline-block; background:#fbbf24; color:#78350f; padding:4px 8px; border-radius:4px; font-size:.8em; font-weight:600; margin-left:8px; }
+    .unavailable-badge { display:inline-block; background:#ef4444; color:white; padding:4px 8px; border-radius:4px; font-size:.8em; font-weight:600; margin-left:8px; }
+    tbody tr.problematic { background-color:#fef3c7 !important; border-left:4px solid #f59e0b; }
+    tbody tr.problematic:hover { background-color:#fde68a !important; }
+    .column-legend { margin-top:30px; padding:20px; background:#f9fafb; border-radius:8px; border:1px solid #e0e0e0; }
+    .column-legend h3 { color:#333; margin-bottom:15px; }
+    .legend-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:15px; }
+    .legend-item { padding:10px; background:white; border-radius:6px; border-left:3px solid #667eea; }
+    .legend-item strong { color:#667eea; }
+    @media (max-width:768px) { .controls { flex-direction:column; } .search-box { min-width:100%; } .button-group { width:100%; } button { flex:1; } .legend-grid { grid-template-columns:1fr; } table { font-size:.85em; } th, td { padding:8px; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📊 TDE Structural Parameters Database — r-band</h1>
+      <p>Tidal Disruption Event Host Galaxy Properties (r-band)</p>
+    </header>
+    <div class="info-box"><strong>ℹ️ About this dataset:</strong> This database contains structural parameters for TDE host galaxies derived from morphological fitting in the r-band band. Use search, sorting, and download to analyse the data.</div>
+    <div class="controls">
+      <div class="search-box"><input type="text" id="searchInput" placeholder="🔍 Search galaxy name, class, or parameters..."></div>
+      <div class="button-group"><button class="btn-download" onclick="downloadCSV()">📥 Download CSV</button><button class="btn-reset" onclick="resetFilters()">↺ Reset</button></div>
+    </div>
+    <div class="tabs"><button class="tab-button active" onclick="switchTab('data', this)">📊 Data</button><button class="tab-button" onclick="switchTab('problematic', this)">⚠️ Problematic Fits</button><button class="tab-button" onclick="switchTab('unavailable', this)">❌ No Data Available</button></div>
+    <div class="stats"><div class="stat-card"><label>Total Galaxies</label><strong id="totalCount">0</strong></div><div class="stat-card"><label>Displayed</label><strong id="displayedCount">0</strong></div><div class="stat-card"><label>H+He Class</label><strong id="hheCount">0</strong></div><div class="stat-card"><label id="problematicLabel" style="display:none;">Problematic Fits</label><strong id="problematicCount" style="display:none;">0</strong></div><div class="stat-card"><label id="unavailableLabel" style="display:none;">Unavailable</label><strong id="unavailableCountStat" style="display:none;">0</strong></div></div>
+    <div id="data-tab" class="tab-content active"><div class="table-wrapper"><table><thead><tr><th class="sortable">Galaxy Name</th><th class="sortable">Fit Model</th><th class="sortable">R<sub>e</sub></th><th class="sortable">R<sub>s</sub></th><th class="sortable">i<sub>bulge</sub></th><th class="sortable">i<sub>disk</sub></th><th class="sortable">q<sub>bulge</sub></th><th class="sortable">q<sub>disk</sub></th><th class="sortable">z</th><th class="sortable">Magnitude</th><th class="sortable">n (Sersic)</th><th class="sortable">Class</th></tr></thead><tbody id="tableBody"></tbody></table></div><div id="noResults" class="no-results" style="display:none;">No galaxies match your search criteria</div></div>
+    <div id="problematic-tab" class="tab-content"><div class="info-box" style="background:#fef3c7; border-left-color:#f59e0b;"><strong>⚠️ Problematic Fits:</strong> These entries have uncertain structural parameters due to complex morphology, poor fits, or other issues. Use with caution.</div><div class="table-wrapper"><table><thead><tr><th>Galaxy Name</th><th>Fit Model</th><th>R<sub>e</sub></th><th>R<sub>s</sub></th><th>i<sub>bulge</sub></th><th>i<sub>disk</sub></th><th>q<sub>bulge</sub></th><th>q<sub>disk</sub></th><th>z</th><th>Magnitude</th><th>n (Sersic)</th><th>Class</th></tr></thead><tbody id="problematicBody"></tbody></table></div><div id="noProblematic" class="no-results" style="display:none;">No problematic fits available for this dataset</div></div>
+    <div id="unavailable-tab" class="tab-content"><div class="info-box" style="background:#fee2e2; border-left-color:#ef4444;"><strong>❌ No Data Available:</strong> These galaxies could not be modeled due to technical issues (no image, faint galaxy, or image quality problems). No reliable structural parameters could be obtained.</div><div class="table-wrapper"><table><thead><tr><th>Galaxy Name</th><th>Reason</th><th>Band</th></tr></thead><tbody id="unavailableBody"></tbody></table></div><div id="noUnavailable" class="no-results" style="display:none;">No unavailable data for this dataset</div></div>
+    <div class="column-legend"><h3>📋 Column Definitions</h3><div class="legend-grid"><div class="legend-item"><strong>Galaxy Name:</strong> TDE event designation</div><div class="legend-item"><strong>Fit Model:</strong> Structural model used (Sersic, Sersic+exp, Sersic+psf, etc.)</div><div class="legend-item"><strong>R<sub>e</sub>:</strong> Bulge effective radius (kpc)</div><div class="legend-item"><strong>R<sub>s</sub>:</strong> Disk scale length (kpc)</div><div class="legend-item"><strong>i<sub>bulge</sub>, i<sub>disk</sub>:</strong> Inclination angles (degrees)</div><div class="legend-item"><strong>q<sub>bulge</sub>, q<sub>disk</sub>:</strong> Axis ratios</div><div class="legend-item"><strong>z:</strong> Redshift</div><div class="legend-item"><strong>Magnitude:</strong> Total magnitude in the respective band</div><div class="legend-item"><strong>n (Sersic):</strong> Sersic index (n=1: exponential, n=4: de Vaucouleurs)</div><div class="legend-item"><strong>Class:</strong> Spectral classification (H: Hydrogen, He: Helium)</div></div></div>
+  </div>
+  <script>
+    const currentBand = 'r';
+    const data = [["AT2024zau", "Sersic", "3.71±0.31", "--", "34.9", "--", "0.82±0.07", "--", "0.0815", "19.83±0.06", "1.55±0.31", "H+He"], ["AT2024wsd", "Sersic", "6.89±0.35", "--", "50.9", "--", "0.63±0.02", "--", "0.063", "18.04±0.03", "3.02±0.16", "H+He"], ["AT2024vip", "Sersic", "5.28±0.10", "--", "69.5", "--", "0.35±0.01", "--", "0.089", "17.20±0.01", "3.24±0.09", "H+He"], ["AT2024ule", "Sersic", "6.83±0.23", "--", "38.7", "--", "0.78±0.02", "--", "0.112", "18.19±0.02", "1.80±0.08", "H+He"], ["AT2024rny", "Sersic", "2.29±0.11", "--", "63.3", "--", "0.45±0.04", "--", "0.1055", "18.84±0.02", "2.29±0.41", "H+He"], ["AT2024qab", "Sersic", "3.01±0.06", "--", "73.7", "--", "0.28±0.02", "--", "0.1398", "18.70±0.01", "2.57±0.19", "H+He"], ["AT2024pvu", "Sersic", "9.50±0.11", "--", "57.3", "--", "0.54±0.00", "--", "0.048", "15.52±0.01", "5.56±0.05", "--"], ["AT2024mvz", "Sersic", "2.84±0.06", "--", "16.3", "--", "0.96±0.02", "--", "0.08", "18.25±0.01", "3.25±0.19", "H+He"], ["AT2024kt", "Sersic", "1.45±0.13", "--", "37.8", "--", "0.79±0.10", "--", "0.11", "20.01±0.02", "1.41±0.65", "H"], ["AT2024gre", "Sersic", "3.21±0.16", "--", "67.0", "--", "0.39±0.03", "--", "0.12", "18.70±0.03", "3.95±0.57", "--"], ["AT2024as", "Sersic", "2.31±0.05", "--", "21.6", "--", "0.93±0.02", "--", "0.13", "17.65±0.01", "5.77±0.30", "H"], ["AT2024agqx", "Sersic", "1.58±0.12", "--", "55.9", "--", "0.56±0.06", "--", "0.194", "19.51±0.03", "2.59±0.74", "He"], ["AT2024admt", "Sersic", "4.28±0.24", "--", "18.2", "--", "0.95±0.02", "--", "0.1105", "18.56±0.03", "4.17±0.30", "He"], ["AT2023wdb", "Sersic+exp", "2.65±0.05", "8.75±0.23", "57.3", "43.1", "0.54±0.01", "0.73±0.01", "0.06", "17.06±0.03", "1.18±0.09", "H+He"], ["AT2023ugy", "Sersic", "2.04±0.02", "--", "29.5", "--", "0.87±0.01", "--", "0.106", "17.36±0.00", "2.38±0.06", "H"], ["AT2023tmq", "Sersic", "5.01±0.05", "--", "50.9", "--", "0.63±0.01", "--", "0.077", "16.94±0.01", "2.54±0.05", "H+He"], ["AT2023mfm", "Sersic", "13.33±0.21", "--", "48.7", "--", "0.66±0.00", "--", "0.087", "16.09±0.01", "4.30±0.05", "H"], ["AT2023lli", "Sersic+exp", "2.91±0.15", "10.61±0.19", "39.6", "54.5", "0.77±0.01", "0.58±0.00", "0.036", "15.76±0.05", "1.71±0.13", "H"], ["AT2023kvy", "Sersic", "2.38±0.13", "--", "50.2", "--", "0.64±0.04", "--", "0.16", "19.39±0.03", "3.40±0.56", "H"], ["AT2022upj", "Sersic+exp", "1.50±0.01", "7.63±0.05", "16.3", "14.1", "0.96±0.01", "0.97±0.00", "0.054", "15.97±0.01", "1.54±0.08", "He"], ["AT2022pna", "Sersic", "2.98±0.10", "--", "30.7", "--", "0.86±0.02", "--", "0.095", "17.60±0.02", "5.06±0.30", "H+He"], ["AT2022lri", "Sersic+exp", "7.47±0.80", "9.45±0.25", "53.8", "33.9", "0.59±0.01", "0.83±0.02", "0.032", "16.14±0.08", "4.07±0.27", "H+He"], ["AT2022hvp", "Sersic", "4.81±0.12", "--", "67.7", "--", "0.38±0.01", "--", "0.12", "17.47±0.01", "4.29±0.19", "He"], ["AT2022fpx", "Sersic", "7.62±0.31", "--", "23.1", "--", "0.92±0.02", "--", "0.073", "17.26±0.02", "3.20±0.12", "H+He"], ["AT2022exr", "Sersic+exp", "1.54±0.61", "5.54±0.10", "51.7", "46.4", "0.62±0.03", "0.69±0.01", "0.096", "17.43±0.28", "4.93±1.83", "H"], ["AT2022emf", "Sersic", "5.55±0.31", "--", "55.2", "--", "0.57±0.02", "--", "0.081", "18.16±0.03", "2.47±0.22", "H+He"], ["AT2022czy", "Sersic", "4.51±0.20", "--", "63.9", "--", "0.44±0.02", "--", "0.109", "18.16±0.02", "4.03±0.31", "H"], ["AT2022csn", "Sersic", "3.68±0.22", "--", "25.8", "--", "0.90±0.02", "--", "0.148", "18.32±0.03", "5.82±0.45", "H+He"], ["AT2022arb", "Sersic", "3.61±0.12", "--", "27.1", "--", "0.89±0.02", "--", "0.062", "18.12±0.02", "3.37±0.24", "H+He"], ["AT2022agi", "Sersic+exp", "1.17±0.09", "3.96±0.20", "80.8", "39.6", "0.16±0.13", "0.77±0.02", "0.11783", "17.16±0.03", "0.65±0.28", "H+He"], ["AT2022adm", "Sersic", "4.46±0.06", "--", "54.5", "--", "0.58±0.01", "--", "0.061", "17.42±0.01", "2.99±0.10", "H+He"], ["AT2021yte", "Sersic", "7.10±0.52", "--", "36.9", "--", "0.80±0.03", "--", "0.053", "17.85±0.04", "3.44±0.29", "H+He"], ["AT2021yzv", "Sersic", "2.85±0.28", "--", "56.6", "--", "0.55±0.07", "--", "0.286", "19.52±0.07", "4.07±1.19", "--"], ["AT2021utq", "Sersic", "1.79±0.16", "--", "41.4", "--", "0.75±0.07", "--", "0.127", "19.12±0.04", "4.02±1.11", "H"], ["AT2021uqv", "Sersic+exp", "1.57±0.04", "3.56±0.10", "71.9", "28.4", "0.31±0.04", "0.88±0.01", "0.106", "17.88±0.04", "1.44±0.18", "H+He"], ["AT2021sdu", "Sersic+psf", "11.56±0.07", "--", "36.9", "--", "0.80±0.00", "--", "0.059", "16.39±0.02", "0.77±0.01", "H+He"], ["AT2021mhg", "Sersic", "1.89±0.05", "--", "47.9", "--", "0.67±0.02", "--", "0.073", "18.55±0.01", "2.08±0.19", "H+He"], ["AT2021nwa", "Sersic", "7.60±0.10", "--", "54.5", "--", "0.58±0.00", "--", "0.047", "16.22±0.01", "3.55±0.05", "H+He"], ["AT2021qxv", "Sersic", "5.46±0.18", "--", "47.9", "--", "0.67±0.02", "--", "0.183", "18.53±0.02", "1.94±0.11", "He"], ["AT2021jjm", "Sersic", "0.95±0.15", "--", "18.2", "--", "0.95±0.16", "--", "0.153", "19.65±0.02", "1.83±1.07", "H"], ["AT2021crk", "Sersic", "5.90±0.23", "--", "49.5", "--", "0.65±0.02", "--", "0.1555", "18.67±0.02", "2.02±0.11", "H+He"], ["AT2021jsg", "Sersic", "1.68±0.04", "--", "50.2", "--", "0.64±0.02", "--", "0.126", "19.27±0.01", "1.78±0.19", "H+He"], ["AT2021lo", "Sersic", "2.52±0.35", "--", "54.5", "--", "0.58±0.09", "--", "0.152", "19.63±0.08", "4.03±1.61", "H+He"], ["AT2020zso", "Sersic+psf", "14.17±0.10", "--", "58.0", "--", "0.53±0.00", "--", "0.061", "16.79±0.01", "0.87±0.02", "H+He"], ["AT2020yue", "Sersic", "3.79±0.10", "--", "51.7", "--", "0.62±0.02", "--", "0.204", "19.06±0.02", "2.01±0.16", "H"], ["AT2020vwl", "Sersic+exp", "5.44±0.62", "8.87±0.14", "43.1", "37.8", "0.73±0.01", "0.79±0.01", "0.0325", "16.09±0.07", "5.64±0.40", "H+He"], ["AT2020wey", "Sersic+exp", "8.38±0.37", "7.92±0.16", "47.9", "63.9", "0.67±0.01", "0.44±0.01", "0.02738", "16.25±0.05", "4.02±0.19", "H+He"], ["AT2020ukj", "Sersic+exp", "3.41±0.20", "10.98±0.24", "41.4", "24.5", "0.75±0.01", "0.91±0.01", "0.066", "16.17±0.05", "2.92±0.16", "--"], ["AT2020qhs", "Sersic", "4.18±0.31", "--", "47.9", "--", "0.67±0.04", "--", "0.345", "18.93±0.04", "3.34±0.43", "--"], ["AT2020opy", "Sersic", "1.93±0.06", "--", "38.7", "--", "0.78±0.02", "--", "0.159", "18.56±0.02", "4.11±0.38", "H+He"], ["AT2020nov", "Sersic+exp", "2.17±0.08", "9.92±0.25", "21.6", "36.9", "0.93±0.01", "0.80±0.01", "0.084", "16.26±0.04", "2.31±0.12", "H+He"], ["AT2020neh", "Sersic", "4.82±0.08", "--", "33.9", "--", "0.83±0.01", "--", "0.062", "17.18±0.01", "2.62±0.07", "H+He"], ["AT2020ocn", "Sersic+exp", "2.04±0.25", "5.81±0.17", "21.6", "44.8", "0.93±0.03", "0.71±0.02", "0.07", "17.13±0.10", "4.94±0.74", "He"], ["AT2020ksf", "Sersic", "5.24±0.12", "--", "21.6", "--", "0.93±0.01", "--", "0.0942", "17.37±0.01", "3.03±0.09", "H+He"], ["AT2020pj", "Sersic+psf", "7.63±0.13", "--", "43.1", "--", "0.73±0.01", "--", "0.068", "17.54±0.04", "0.91±0.06", "H+He"], ["AT2019teq", "Sersic", "7.91±0.06", "--", "60.0", "--", "0.50±0.00", "--", "0.0878", "17.43±0.00", "0.85±0.01", "H+He"], ["AT2019lwu", "Sersic", "3.60±0.15", "--", "29.5", "--", "0.87±0.04", "--", "0.117", "19.14±0.03", "1.89±0.20", "H"], ["AT2019gte", "Sersic+exp", "1.48±0.04", "11.66±0.04", "53.1", "79.6", "0.60±0.01", "0.18±0.00", "0.086", "15.87±0.00", "0.64±0.12", "He"], ["AT2019ehz", "Sersic", "6.69±0.31", "--", "56.6", "--", "0.55±0.02", "--", "0.074", "18.21±0.03", "2.84±0.16", "H"], ["AT2019bhf", "Sersic+exp", "2.09±0.55", "3.83±0.09", "73.7", "28.4", "0.28±0.08", "0.88±0.03", "0.1206", "17.83±0.18", "4.44±1.31", "H+He"], ["AT2018lna", "Sersic", "4.15±0.13", "--", "48.7", "--", "0.66±0.02", "--", "0.091", "19.25±0.02", "1.45±0.12", "H+He"], ["AT2018lni", "Sersic", "2.04±0.19", "--", "47.9", "--", "0.67±0.09", "--", "0.138", "19.51±0.03", "1.36±0.73", "H+He"], ["AT2018iih", "Sersic", "3.83±0.10", "--", "75.5", "--", "0.25±0.01", "--", "0.212", "18.37±0.02", "3.53±0.28", "He"], ["AT2018hyz", "Sersic+exp", "1.24±0.12", "3.96±0.03", "83.7", "27.1", "0.11±0.10", "0.89±0.01", "0.04573", "16.55±0.06", "3.96±0.51", "H+He"], ["AT2018hco", "Sersic", "4.23±0.12", "--", "16.3", "--", "0.96±0.02", "--", "0.09", "18.10±0.02", "2.57±0.12", "H"], ["AT2018mli", "Sersic+exp", "2.68±0.63", "10.79±0.51", "8.1", "19.9", "0.99±0.02", "0.94±0.04", "0.076", "17.31±0.27", "4.55±0.95", "H+He"], ["AT2018bsi", "Sersic+exp", "4.72±0.18", "15.88±0.28", "47.2", "45.6", "0.68±0.00", "0.70±0.00", "0.051", "15.17±0.04", "1.93±0.08", "H+He"], ["AT2018zr", "Sersic", "7.24±0.12", "--", "46.4", "--", "0.69±0.01", "--", "0.071", "17.58±0.01", "1.78±0.04", "H"], ["AT2017eqx", "Sersic", "1.97±0.07", "--", "58.7", "--", "0.52±0.03", "--", "0.1089", "19.87±0.01", "0.99±0.22", "He"], ["AT2024ymu", "Sersic", "12.89±0.46", "--", "49.5", "--", "0.65±0.01", "--", "0.12", "16.49±0.02", "5.66±0.12", "--"], ["AT2024aepd", "Sersic+exp", "1.46±0.18", "5.46±0.15", "48.7", "64.5", "0.66±0.05", "0.43±0.02", "0.0835", "17.80±0.09", "3.97±0.82", "H+He"], ["AT2023cvb", "Sersic+exp", "5.87±1.06", "8.36±0.06", "82.5", "46.4", "0.13±0.01", "0.69±0.01", "0.071", "16.18±0.10", "5.06±0.50", "H"], ["AT2023xen", "Sersic", "7.36±0.10", "--", "36.9", "--", "0.80±0.01", "--", "0.1335", "17.57±0.01", "1.30±0.03", "H+He"], ["AT2022gdw", "Sersic", "6.49±0.32", "--", "25.8", "--", "0.90±0.02", "--", "0.105", "17.73±0.03", "3.36±0.16", "He"], ["AT2021uvz", "Sersic", "1.08±0.07", "--", "23.1", "--", "0.92±0.05", "--", "0.176", "19.19±0.04", "5.10±1.07", "H+He"], ["AT2021axu", "Sersic", "1.61±0.10", "--", "36.9", "--", "0.80±0.05", "--", "0.192", "19.29±0.04", "5.06±0.87", "H+He"], ["AT2020ysg", "Sersic", "5.33±0.78", "--", "68.9", "--", "0.36±0.04", "--", "0.277", "19.34±0.08", "3.77±0.69", "--"], ["AT2020afhd", "Sersic+exp", "3.34±0.29", "11.31±0.06", "0.0", "33.9", "1.00±0.01", "0.83±0.00", "0.027", "15.37±0.06", "3.40±0.24", "H+He"], ["AT2020mbq", "Sersic", "2.19±0.09", "--", "27.1", "--", "0.89±0.04", "--", "0.093", "19.34±0.03", "3.05±0.37", "H"], ["AT2019mha", "Sersic", "5.69±0.56", "--", "71.3", "--", "0.32±0.02", "--", "0.148", "18.40±0.04", "5.69±0.63", "H+He"], ["AT2019cho", "Sersic", "8.34±1.49", "--", "69.5", "--", "0.35±0.03", "--", "0.193", "19.30±0.09", "4.77±0.81", "H+He"], ["AT2019dsg", "Sersic+exp", "8.16±0.21", "16.50±0.36", "51.7", "37.8", "0.62±0.00", "0.79±0.02", "0.0512", "15.72±0.04", "3.62±0.05", "H+He"], ["AT2019vcb", "Sersic", "1.87±0.06", "--", "32.9", "--", "0.84±0.02", "--", "0.089", "18.13±0.02", "5.88±0.47", "H+He"], ["AT2021ehb", "Sersic+exp", "22.49±0.16", "15.02±0.20", "65.8", "81.4", "0.41±0.00", "0.15±0.00", "0.018", "14.36±0.02", "4.12±0.03", "--"], ["AT2021gje", "Sersic", "3.51±0.41", "--", "36.9", "--", "0.80±0.04", "--", "0.358", "18.71±0.06", "5.66±0.86", "He"], ["AT2022dsb", "Sersic+exp", "2.04±0.02", "29.86±0.16", "32.9", "66.4", "0.84±0.01", "0.40±0.00", "0.023", "14.07±0.01", "2.89±0.09", "H+He"], ["AT2020mot", "Sersic", "3.20±0.04", "--", "28.4", "--", "0.88±0.01", "--", "0.07", "16.80±0.01", "3.70±0.13", "H+He"], ["AT2022gri", "Sersic+ex+ps", "7.28±0.02", "11.91±0.12", "65.8", "60.7", "0.41±0.00", "0.49±0.00", "0.028", "14.99±0.01", "0.66±0.01", "H+He"], ["AT2022dbl", "Sersic+exp", "6.88±0.38", "17.31±0.12", "25.8", "41.4", "0.90±0.00", "0.74±0.01", "0.0284", "15.21±0.04", "4.74±0.16", "H+He"], ["AT2022rz", "Sersic", "6.49±2.07", "--", "51.7", "--", "0.62±0.07", "--", "0.107", "19.17±0.15", "5.65±1.64", "H+He"], ["AT2024bgz", "Sersic+ex+ps", "17.83±0.10", "8.57±0.09", "50.2", "31.8", "0.64±0.01", "0.85±0.01", "0.0585", "15.52±0.04", "0.27±0.01", "H+He"], ["AT2024eqp", "Sersic", "6.56±1.24", "--", "32.9", "--", "0.84±0.05", "--", "0.33", "19.07±0.09", "5.94±0.95", "--"], ["AT2022aee", "Sersic", "7.07±1.12", "--", "32.9", "--", "0.84±0.04", "--", "0.124", "18.00±0.08", "4.77±0.73", "H"], ["AT2021qth", "Sersic", "4.11±0.27", "--", "41.4", "--", "0.75±0.02", "--", "0.0805", "18.49±0.04", "3.43±0.29", "H+He"], ["AT2021ack", "Sersic", "5.61±0.54", "--", "40.5", "--", "0.76±0.03", "--", "0.133", "17.92±0.06", "2.99±0.37", "H+He"], ["AT2020acka", "Sersic", "1.65±0.20", "--", "40.5", "--", "0.76±0.10", "--", "0.338", "19.45±0.07", "5.15±1.81", "--"], ["AT2020ddv", "Sersic", "6.80±1.36", "--", "53.1", "--", "0.60±0.04", "--", "0.16", "18.74±0.09", "5.92±1.07", "He"], ["AT2019meg", "Sersic", "1.33±0.14", "--", "32.9", "--", "0.84±0.08", "--", "0.152", "19.47±0.04", "3.69±1.23", "H"], ["AT2020vdq", "Sersic", "2.09±0.06", "--", "61.3", "--", "0.48±0.02", "--", "0.044", "18.01±0.02", "6.76±0.59", "H+He"], ["AT2024lhc", "Sersic", "8.56±0.47", "--", "24.5", "--", "0.91±0.01", "--", "0.2045", "17.25±0.03", "5.80±0.22", "--"], ["iPTF16axa", "Sersic", "9.11±0.34", "--", "54.5", "--", "0.58±0.01", "--", "0.108", "17.67±0.02", "3.16±0.11", "H+He"], ["ASASSN15oi", "Sersic", "9.03±0.09", "--", "60.0", "--", "0.50±0.00", "--", "0.0484", "16.39±0.01", "1.80±0.02", "H+He"], ["iPTF15af", "Sersic", "8.28±0.24", "--", "36.9", "--", "0.80±0.01", "--", "0.079", "17.24±0.02", "3.90±0.09", "H+He"], ["ASASSN14li", "Sersic+exp", "3.75±0.02", "17.67±0.55", "42.3", "35.9", "0.74±0.00", "0.81±0.01", "0.0206", "14.98±0.02", "2.26±0.02", "H+He"], ["ASASSN14ae", "Sersic+psf", "11.23±0.11", "--", "78.5", "--", "0.20±0.00", "--", "0.0436", "16.11±0.01", "2.63±0.07", "H+He"], ["LSQ12dyw", "Sersic", "1.90±0.05", "--", "28.4", "--", "0.88±0.02", "--", "0.09", "18.47±0.01", "2.43±0.20", "H+He"], ["PS1-10jh", "Sersic", "1.18±0.20", "--", "80.8", "--", "0.16±0.26", "--", "0.17", "20.55±0.02", "2.15±1.31", "He"], ["PTF09djl", "Sersic", "0.65±0.08", "--", "43.1", "--", "0.73±0.10", "--", "0.184", "19.31±0.03", "4.11±1.48", "H"], ["PTF09ge", "Sersic+exp", "0.98±0.05", "6.64±0.07", "30.7", "55.2", "0.86±0.04", "0.57±0.00", "0.064", "16.87±0.02", "1.02±0.35", "H+He"], ["AT2017gge", "2Sersic+exp", "1.26±0.04", "13.30±0.16", "31.8", "75.5", "0.85±0.03", "0.25±0.00", "0.066", "15.99±0.03", "2.08±0.29", "H"], ["AT2019qiz", "2Sersic+exp", "5.29±0.07", "31.15±0.19", "37.8", "31.8", "0.79±0.01", "0.85±0.00", "0.151", "13.90±0.01", "1.69±0.03", "H+He"], ["AT2024tvd", "Sersic+psf", "33.00±0.34", "", "58.0", "", "0.53±0.00", "", "0.0449", "14.29±0.02", "6.05±0.05", "H+He"], ["AT2023rvb", "Sersic+psf", "16.61±0.13", "", "41.4", "", "0.75±0.01", "", "0.0815", "16.46±0.03", "0.60±0.01", "H+He"], ["AT2023mhs", "Sersic+exp", "5.12±0.11", "15.45±3.11", "33.9", "33.9", "0.83±0.00", "0.83±0.00", "0.0482", "16.23±0.09", "1.17±0.03", "H+He"], ["AT2016fnl", "Sersic+ex+ps", "4.39±0.03", "17.44±0.05", "71.9", "79.6", "0.31±0.00", "0.18±0.00", "0.16328", "14.63±0.02", "1.44±0.04", "H+He"], ["AT2022bdw", "Sersic+psf", "21.42±0.05", "", "32.9", "", "0.84±0.00", "", "0.03782", "14.85±0.00", "1.05±0.00", "H+He"], ["AT2022dyt", "Sersic+exp", "3.75±0.35", "7.81±0.03", "85.4", "52.4", "0.08±0.01", "0.61±0.00", "0.072", "16.04±0.05", "5.26±0.38", "H"], ["AT2024gxr", "Sersic+psf", "12.89±0.04", "", "29.5", "", "0.87±0.00", "", "0.051", "15.36±0.01", "0.90±0.01", "He"], ["AT2024yqo", "2Sersic+exp", "10.18±1.29", "19.16±0.48", "70.1", "23.1", "0.34±0.00", "0.92±0.02", "0.06168", "15.24±0.09", "5.07±0.34", "H+He"], ["AT2023clx", "2Sersic+exp", "6.35±0.07", "20.59±0.09", "82.0", "50.2", "0.14±0.01", "0.64±0.00", "0.01107", "13.35±0.02", "0.98±0.04", "H+He"]];
+    const problematicFits = {"r": ["AT2022dyt", "AT2019qiz", "AT2023clx", "AT2024gxr"], "g": ["AT2022dyt", "AT2019qiz", "AT2023clx", "AT2024gxr"]};
+    const unavailableData = [["AT2024doo", "No image", "r/g"], ["AT2022cmc", "Faint galaxy", "r/g"], ["AT2021blz", "No image", "r/g"], ["AT2018dyb", "No image", "r/g"], ["AT2018fyk", "No image", "r/g"], ["AT2018jbv", "Faint galaxy", "r/g"], ["AT2019ahk", "No image", "r/g"], ["AT2022ibq", "Faint galaxy", "r/g"], ["AT2020riz", "Faint galaxy", "r/g"], ["Swift-J2058+08", "Faint galaxy", "r/g"], ["Swift-J1644+57", "Faint galaxy", "r/g"], ["AT2023vto", "Faint galaxy", "r/g"], ["AT2019azh", "Different frames image", "r/g"], ["AT2022wtn", "Nearby massive galaxy", "r/g"], ["PS1-10jh", "Faint galaxy", "g"], ["AT2018lni", "Faint galaxy", "g"], ["AT2018lna", "Faint galaxy", "g"], ["AT2019meg", "Faint galaxy", "g"], ["AT2020acka", "Faint galaxy", "g"], ["AT2020ysg", "Faint galaxy", "g"], ["AT2024eqp", "Faint galaxy", "g"], ["AT2024agqx", "Faint galaxy", "g"], ["AT2024gre", "Faint galaxy", "g"], ["AT2024zau", "Faint galaxy", "g"], ["AT2021yzv", "Faint galaxy", "g"], ["AT2021lo", "Faint galaxy", "g"], ["AT2024kt", "Faint galaxy", "g"], ["AT2021uvz", "Faint galaxy", "g"], ["AT2022bdw", "Different frames on g", "g"]];
+    const headers = ['Galaxy Name','Fit Model','Re','Rs','i_bulge','i_disk','q_bulge','q_disk','z','Magnitude','n','Class'];
+    let currentData = data;
+    let sortConfig = {key:0,direction:'asc'};
+
+    function renderTable(rows = currentData) {
+      const tbody = document.getElementById('tableBody');
+      const noResults = document.getElementById('noResults');
+      tbody.innerHTML = '';
+      if (rows.length === 0) {
+        noResults.style.display = 'block';
+        updateStats(0,0,0);
+        return;
+      }
+      noResults.style.display = 'none';
+      rows.forEach(row => {
+        const tr = document.createElement('tr');
+        row.forEach((cell, idx) => {
+          const td = document.createElement('td');
+          if (idx === 0) td.className = 'galaxy-name';
+          td.textContent = cell || '--';
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+      updateStats(currentData.length, rows.length, countProblematicFits());
+    }
+
+    function renderProblematicTable() {
+      const problematic = problematicFits[currentBand] || [];
+      const rows = problematic.map(name => {
+        const fullRow = currentData.find(row => row[0] === name);
+        return fullRow || [name, 'Data incomplete', '--', '--', '--', '--', '--', '--', '--', '--', '--', '--'];
+      });
+      const tbody = document.getElementById('problematicBody');
+      const noProblematic = document.getElementById('noProblematic');
+      tbody.innerHTML = '';
+      if (rows.length === 0) {
+        noProblematic.style.display = 'block';
+        return;
+      }
+      noProblematic.style.display = 'none';
+      rows.forEach(row => {
+        const tr = document.createElement('tr');
+        row.forEach((cell, idx) => {
+          const td = document.createElement('td');
+          if (idx === 0) td.className = 'galaxy-name';
+          td.textContent = cell || '--';
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderUnavailableTable() {
+      const filtered = unavailableData.filter(row => row[2].includes(currentBand) || row[2].includes('r/g'));
+      const tbody = document.getElementById('unavailableBody');
+      const noUnavailable = document.getElementById('noUnavailable');
+      tbody.innerHTML = '';
+      if (filtered.length === 0) {
+        noUnavailable.style.display = 'block';
+        return;
+      }
+      noUnavailable.style.display = 'none';
+      filtered.forEach(row => {
+        const tr = document.createElement('tr');
+        row.forEach(cell => {
+          const td = document.createElement('td');
+          td.textContent = cell;
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+      updateUnavailableCount(filtered.length);
+    }
+
+    function updateStats(total, displayed, problematicCount) {
+      document.getElementById('totalCount').textContent = total;
+      document.getElementById('displayedCount').textContent = displayed;
+      const hheCount = currentData.filter(row => row[11] && row[11].includes('H+He')).length;
+      document.getElementById('hheCount').textContent = hheCount;
+    }
+
+    function updateUnavailableCount(count) {
+      document.getElementById('unavailableCountStat').textContent = count;
+    }
+
+    function countProblematicFits() {
+      return (problematicFits[currentBand] || []).length;
+    }
+
+    function filterTable() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      const filtered = currentData.filter(row => row.some(cell => String(cell).toLowerCase().includes(searchTerm)));
+      renderTable(filtered);
+    }
+
+    function sortTable(columnIndex) {
+      if (sortConfig.key === columnIndex) {
+        sortConfig.direction = sortConfig.direction === 'asc' ? 'desc' : 'asc';
+      } else {
+        sortConfig.key = columnIndex;
+        sortConfig.direction = 'asc';
+      }
+      currentData.sort((a,b) => {
+        const aVal = a[columnIndex] || '';
+        const bVal = b[columnIndex] || '';
+        const aNum = parseFloat(aVal);
+        const bNum = parseFloat(bVal);
+        if (!isNaN(aNum) && !isNaN(bNum)) return sortConfig.direction === 'asc' ? aNum - bNum : bNum - aNum;
+        return sortConfig.direction === 'asc' ? String(aVal).localeCompare(String(bVal)) : String(bVal).localeCompare(String(aVal));
+      });
+      updateTableHeaders();
+      filterTable();
+    }
+
+    function updateTableHeaders() {
+      document.querySelectorAll('th.sortable').forEach((th, idx) => {
+        th.classList.remove('sorted-asc','sorted-desc');
+        if (idx === sortConfig.key) th.classList.add(sortConfig.direction === 'asc' ? 'sorted-asc' : 'sorted-desc');
+      });
+    }
+
+    function switchTab(tabName, button) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(tabName + '-tab').classList.add('active');
+      button.classList.add('active');
+      document.getElementById('problematicLabel').style.display = tabName === 'problematic' ? 'block' : 'none';
+      document.getElementById('problematicCount').style.display = tabName === 'problematic' ? 'block' : 'none';
+      document.getElementById('unavailableLabel').style.display = tabName === 'unavailable' ? 'block' : 'none';
+      document.getElementById('unavailableCountStat').style.display = tabName === 'unavailable' ? 'block' : 'none';
+      if (tabName === 'data') renderTable();
+      if (tabName === 'problematic') { renderProblematicTable(); document.getElementById('problematicCount').textContent = countProblematicFits(); }
+      if (tabName === 'unavailable') renderUnavailableTable();
+    }
+
+    function downloadCSV() {
+      const rows = [headers, ...currentData];
+      const csv = rows.map(row => row.map(cell => {
+        const text = String(cell);
+        return text.includes(',') || text.includes('"') ? '"' + text.replace(/"/g, '""') + '"' : text;
+      }).join(',')).join('\n');
+      const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `TDE_structural_parameters_r_band.csv`;
+      link.click();
+    }
+
+    function resetFilters() {
+      document.getElementById('searchInput').value = '';
+      sortConfig = {key:0,direction:'asc'};
+      updateTableHeaders();
+      renderTable();
+    }
+
+    document.getElementById('searchInput').addEventListener('input', filterTable);
+    document.querySelectorAll('th.sortable').forEach((th, idx) => th.addEventListener('click', () => sortTable(idx)));
+    renderTable();
+    renderProblematicTable();
+    renderUnavailableTable();
+  </script>
+</body>
+</html>
