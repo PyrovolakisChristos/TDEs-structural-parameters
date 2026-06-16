@@ -106,12 +106,22 @@
     // We'll render two separate tables and toggle visibility
     let currentVisible = 'r'; // 'r' or 'g'
 
-    function showBand(band) {
+    function showBand(band, replaceURL = true) {
       currentVisible = band;
       document.getElementById('btn-r').classList.toggle('active', band === 'r');
       document.getElementById('btn-g').classList.toggle('active', band === 'g');
       document.getElementById('rContainer').style.display = band === 'r' ? 'block' : 'none';
       document.getElementById('gContainer').style.display = band === 'g' ? 'block' : 'none';
+      // update URL so the link reflects the selected band
+      try {
+        if (replaceURL) {
+          const url = new URL(window.location.href);
+          url.searchParams.set('band', band);
+          window.history.replaceState(null, '', url.toString());
+        }
+      } catch (e) {
+        // ignore if URL API not available
+      }
       renderR();
       renderG();
     }
@@ -157,8 +167,17 @@
     }
 
     document.getElementById('searchInput').addEventListener('keyup', search);
-    // initialize show r
-    showBand('r');
+    // initialize from URL param if present, otherwise default to r
+    (function initBandFromURL(){
+      let initial = 'r';
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const b = params.get('band');
+        if (b === 'r' || b === 'g') initial = b;
+      } catch (e) {}
+      // showBand(false) will update the UI and avoid replacing the URL on load
+      showBand(initial, false);
+    })();
   </script>
 </body>
 </html>
