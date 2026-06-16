@@ -3,11 +3,10 @@ We obtain all the structural parameters of the TDE sample in the cases where a r
 
 ## Quick Start
 
-**Single-band pages (use these):**
-- r-band: https://raw.githack.com/PyrovolakisChristos/TDEs-structural-parameters/main/r.html
-- g-band: https://raw.githack.com/PyrovolakisChristos/TDEs-structural-parameters/main/g.html
+**Simple combined database (academic style):**
+- https://raw.githack.com/PyrovolakisChristos/TDEs-structural-parameters/main/database.html
 
-Open any link from any computer to view the rendered page directly in your browser.
+Open any link from any computer to view the database directly in your browser.
 
 ## CSV Data
 
