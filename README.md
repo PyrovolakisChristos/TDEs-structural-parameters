@@ -4,6 +4,7 @@ We obtain all the structural parameters of the TDE sample in the cases where a r
 
 ## Usage
 
+- [Open `all.html`](all.html) to view the full combined database for both r-band and g-band.
 - [Open `index.html`](index.html) directly in a browser.
 - [Open `r.html`](r.html) to view the r-band dataset.
 - [Open `g.html`](g.html) to view the g-band dataset.

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TDE Structural Parameters Database</title>
+  <style>
+    body { margin:0; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: linear-gradient(135deg,#667eea,#764ba2); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; color:#111827; }
+    .card { width:100%; max-width:780px; background:white; border-radius:18px; box-shadow:0 24px 80px rgba(0,0,0,.18); padding:40px; text-align:center; }
+    h1 { margin-bottom:20px; font-size:2.5rem; }
+    p { margin-bottom:28px; color:#475569; line-height:1.7; }
+    .links { display:flex; flex-wrap:wrap; gap:20px; justify-content:center; }
+    .links a { min-width:180px; padding:16px 24px; border-radius:12px; color:white; text-decoration:none; font-weight:700; display:inline-flex; justify-content:center; align-items:center; transition:transform .2s ease, box-shadow .2s ease; }
+    .links a:hover { transform:translateY(-3px); }
+    .r-link { background:#2563eb; }
+    .g-link { background:#16a34a; }
+    .info { margin-top:30px; color:#334155; font-size:.95rem; line-height:1.8; }
+    .info a { color:#4338ca; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>📊 TDE Structural Parameters</h1>
+    <p>Select the band dataset you want to view. Each band has its own standalone page and CSV file.</p>
+    <div class="links">
+      <a class="r-link" href="r.html">Open r-band page</a>
+      <a class="g-link" href="g.html">Open g-band page</a>
+      <a class="all-link" href="all.html">Open full database</a>
+    </div>
+    <div class="info">
+      <p>CSV exports:</p>
+      <p><a href="data/r_band.csv">data/r_band.csv</a> · <a href="data/g_band.csv">data/g_band.csv</a></p>
+      <p>Open `index.html` directly in a browser and click a band page to view the data.</p>
+    </div>
+  </div>
+</body>
+</html>
