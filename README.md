@@ -4,11 +4,7 @@ We obtain all the structural parameters of the TDE sample in the cases where a r
 ## Quick Start
 
 **Simple combined database (academic style):**
-- https://cdn.jsdelivr.net/gh/PyrovolakisChristos/TDEs-structural-parameters/database.html
-
-Individual band pages:
-- **r-band**: https://cdn.jsdelivr.net/gh/PyrovolakisChristos/TDEs-structural-parameters/r.html
-- **g-band**: https://cdn.jsdelivr.net/gh/PyrovolakisChristos/TDEs-structural-parameters/g.html
+- https://raw.githack.com/PyrovolakisChristos/TDEs-structural-parameters/main/database.html
 
 Open any link from any computer to view the database directly in your browser.
 
