@@ -156,17 +156,17 @@
       const tbody = document.getElementById('gTableBody');
       const noResults = document.getElementById('noResults');
       tbody.innerHTML = '';
-      // start with the gData rows
-      let rows = gData.slice();
-      // ensure placeholders for requested names at the bottom
       const placeholders = ["AT2023clx", "AT2024gxr"];
+      // start with the gData rows, but exclude placeholder rows from the source array
+      let rows = gData.filter(row => !placeholders.includes(String(row[0])));
+      // apply text filter if present
+      if (filter) rows = rows.filter(row => row.some(cell => String(cell).toLowerCase().includes(filter)));
+      // append placeholder rows at the bottom if they are not already present
       placeholders.forEach(name => {
         if (!rows.find(r => String(r[0]).toLowerCase() === name.toLowerCase())) {
           rows.push([name, "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--"]);
         }
       });
-      // apply text filter if present
-      if (filter) rows = rows.filter(row => row.some(cell => String(cell).toLowerCase().includes(filter)));
       if (rows.length === 0) { if (currentVisible==='g') noResults.style.display='block'; return; }
       noResults.style.display='none';
       rows.forEach(row => {
