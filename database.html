@@ -11,6 +11,9 @@
     h1 { margin-bottom: 10px; font-size: 1.8rem; color: #222; }
     .subtitle { color: #666; margin-bottom: 20px; font-size: 0.95rem; }
     .search-box { margin-bottom: 20px; display: flex; gap: 10px; }
+    .band-toggle { margin-bottom: 14px; display:flex; gap:8px; }
+    .band-toggle button { padding: 8px 12px; border-radius:6px; border:1px solid #ccc; background: #fff; cursor:pointer; }
+    .band-toggle button.active { background:#2c3e50; color:#fff; border-color:#2c3e50; }
     .search-box input { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; }
     .search-box button { padding: 10px 20px; background: #2c3e50; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; }
     .search-box button:hover { background: #34495e; }
@@ -31,6 +34,12 @@
     <h1>TDE Structural Parameters Database</h1>
     <p class="subtitle">Combined r-band and g-band measurements</p>
     
+    <div class="band-toggle">
+      <button id="btn-all" class="active" onclick="switchBand('all')">All</button>
+      <button id="btn-r" onclick="switchBand('r')">r‑band</button>
+      <button id="btn-g" onclick="switchBand('g')">g‑band</button>
+    </div>
+
     <div class="search-box">
       <input id="searchInput" type="text" placeholder="Search galaxy name, band, or parameter...">
       <button onclick="search()">Search</button>
@@ -74,33 +83,46 @@
       ...rData.map(row => ['r', ...row]),
       ...gData.map(row => ['g', ...row])
     ];
-    
+
+    let filterBand = 'all'; // 'all' | 'r' | 'g'
     let displayedData = [...allData];
     let sortKey = 1;
     let sortAsc = true;
-    
+
+    function switchBand(band) {
+      filterBand = band;
+      document.getElementById('btn-all').classList.toggle('active', band === 'all');
+      document.getElementById('btn-r').classList.toggle('active', band === 'r');
+      document.getElementById('btn-g').classList.toggle('active', band === 'g');
+      applyFilters();
+    }
+
+    function applyFilters() {
+      const term = document.getElementById('searchInput').value.toLowerCase();
+      const base = allData.filter(row => filterBand === 'all' ? true : row[0] === filterBand);
+      if (!term) {
+        displayedData = [...base];
+      } else {
+        displayedData = base.filter(row => row.some(cell => String(cell).toLowerCase().includes(term)));
+      }
+      render();
+    }
+
     function updateStats() {
       const rCount = allData.filter(r => r[0] === 'r').length;
       const gCount = allData.filter(r => r[0] === 'g').length;
       document.getElementById('stats').textContent = `Total: ${displayedData.length} rows | r-band: ${rCount} | g-band: ${gCount}`;
     }
-    
+
     function search() {
-      const term = document.getElementById('searchInput').value.toLowerCase();
-      if (!term) {
-        displayedData = [...allData];
-      } else {
-        displayedData = allData.filter(row => row.some(cell => String(cell).toLowerCase().includes(term)));
-      }
-      render();
+      applyFilters();
     }
-    
+
     function reset() {
       document.getElementById('searchInput').value = '';
-      displayedData = [...allData];
-      render();
+      applyFilters();
     }
-    
+
     function sortBy(index) {
       if (sortKey === index) {
         sortAsc = !sortAsc;
@@ -111,8 +133,8 @@
       displayedData.sort((a, b) => {
         const aVal = a[sortKey] || '';
         const bVal = b[sortKey] || '';
-        const aNum = parseFloat(aVal.replace(/[^0-9.+-]/g, ''));
-        const bNum = parseFloat(bVal.replace(/[^0-9.+-]/g, ''));
+        const aNum = parseFloat(String(aVal).replace(/[^0-9.+-]/g, ''));
+        const bNum = parseFloat(String(bVal).replace(/[^0-9.+-]/g, ''));
         if (!isNaN(aNum) && !isNaN(bNum)) {
           return sortAsc ? aNum - bNum : bNum - aNum;
         }
@@ -120,18 +142,18 @@
       });
       render();
     }
-    
+
     function render() {
       const tbody = document.getElementById('tableBody');
       const noResults = document.getElementById('noResults');
       tbody.innerHTML = '';
-      
+
       if (displayedData.length === 0) {
         noResults.style.display = 'block';
         return;
       }
       noResults.style.display = 'none';
-      
+
       displayedData.forEach(row => {
         const tr = document.createElement('tr');
         row.forEach((cell, i) => {
@@ -146,9 +168,10 @@
       });
       updateStats();
     }
-    
+
     document.getElementById('searchInput').addEventListener('keyup', search);
-    render();
+    // initialize
+    switchBand('all');
   </script>
 </body>
 </html>
