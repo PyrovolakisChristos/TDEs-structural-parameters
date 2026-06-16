@@ -156,7 +156,17 @@
       const tbody = document.getElementById('gTableBody');
       const noResults = document.getElementById('noResults');
       tbody.innerHTML = '';
-      const rows = gData.filter(row => !filter || row.some(cell => String(cell).toLowerCase().includes(filter)));
+      // start with the gData rows
+      let rows = gData.slice();
+      // ensure placeholders for requested names
+      const placeholders = ["AT2023clx", "AT2024gxr"];
+      placeholders.forEach(name => {
+        if (!rows.find(r => String(r[0]).toLowerCase() === name.toLowerCase())) {
+          rows.unshift([name, "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--"]);
+        }
+      });
+      // apply text filter if present
+      if (filter) rows = rows.filter(row => row.some(cell => String(cell).toLowerCase().includes(filter)));
       if (rows.length === 0) { if (currentVisible==='g') noResults.style.display='block'; return; }
       noResults.style.display='none';
       rows.forEach(row => {
