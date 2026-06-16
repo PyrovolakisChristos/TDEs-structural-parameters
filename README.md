@@ -5,10 +5,13 @@ We obtain all the structural parameters of the TDE sample in the cases where a r
 
 Open [index.html](https://github.com/PyrovolakisChristos/TDEs-structural-parameters/blob/main/index.html) in your browser and click on either dataset:
 
-- **r-band**: [r.html](https://raw.githubusercontent.com/PyrovolakisChristos/TDEs-structural-parameters/main/r.html)
-- **g-band**: [g.html](https://raw.githubusercontent.com/PyrovolakisChristos/TDEs-structural-parameters/main/g.html)
+- **r-band**: [r.html](https://cdn.jsdelivr.net/gh/PyrovolakisChristos/TDEs-structural-parameters/r.html)
+- **g-band**: [g.html](https://cdn.jsdelivr.net/gh/PyrovolakisChristos/TDEs-structural-parameters/g.html)
 
-To open from another computer, download the repository or use it directly from GitHub by opening the raw files in your browser.
+**From another computer, open these links directly:**
+
+- **r-band database**: https://cdn.jsdelivr.net/gh/PyrovolakisChristos/TDEs-structural-parameters/r.html
+- **g-band database**: https://cdn.jsdelivr.net/gh/PyrovolakisChristos/TDEs-structural-parameters/g.html
 
 ## CSV Data
 
