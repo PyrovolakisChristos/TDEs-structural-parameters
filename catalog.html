@@ -67,12 +67,9 @@
   </div>
 
   <script>
-    const repoBase = 'https://raw.githubusercontent.com/PyrovolakisChristos/TDEs-structural-parameters/main/';
-    const localBase = '/';
-
     function dataUrl(path) {
-      const host = window.location.hostname;
-      return host === '127.0.0.1' || host === 'localhost' ? localBase + path : repoBase + path;
+      const base = window.location.pathname.replace(/\/[^/]*$/, '/');
+      return new URL(path, window.location.origin + base).toString();
     }
 
     function parseCsv(text) {

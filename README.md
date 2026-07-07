@@ -10,6 +10,12 @@ This repository contains the TDE structural-parameter data files.
 
 ## Interactive catalog
 
-Open [catalog.html](catalog.html) to browse the r-band and g-band tables with search and excluded-TDE warnings.
+Open [index.html](index.html) to reach the landing page, then click the catalog link there.
 
-Open either file directly in a browser to view the available data.
+Direct links:
+- [catalog.html](catalog.html)
+- [data/r_band.csv](data/r_band.csv)
+- [data/g_band.csv](data/g_band.csv)
+- [data/Excluded_TDEs.csv](data/Excluded_TDEs.csv)
+
+Open any of these files directly in a browser to view the available data.
