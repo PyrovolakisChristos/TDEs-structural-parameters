@@ -17,5 +17,6 @@ Direct links:
 - [data/r_band.csv](data/r_band.csv)
 - [data/g_band.csv](data/g_band.csv)
 - [data/Excluded_TDEs.csv](data/Excluded_TDEs.csv)
+- Local preview: http://127.0.0.1:8000/data/r_band.csv
 
 Open any of these files directly in a browser to view the available data.
