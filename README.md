@@ -61,35 +61,17 @@ $$
 
 For an angular-diameter distance $D_A$ in Mpc, the physical scale corresponding to one arcsecond is
 
-$$
-\mathrm{kpc\ per\ arcsec}
-=
-\frac{D_A \times 1000}{206265}.
-$$
+$$\mathrm{kpc\ per\ arcsec} = \frac{D_A \times 1000}{206265}.$$
 
 The physical radius is therefore
 
-$$
-R_{\mathrm{kpc}}
-=
-R_{\mathrm{pix}}
-\times 0.25
-\times
-\frac{D_A \times 1000}{206265}.
-$$
+$$R_{\mathrm{kpc}} = R_{\mathrm{pix}} \times 0.25 \times \frac{D_A \times 1000}{206265}.$$
 
 The same conversion can be applied to both `Re` and `Rs`.
 
 For example,
 
-$$
-R_{e,\mathrm{kpc}}
-=
-R_{e,\mathrm{pix}}
-\times 0.25
-\times
-\frac{D_A \times 1000}{206265}.
-$$
+$$R_{e,\mathrm{kpc}} = R_{e,\mathrm{pix}} \times 0.25 \times \frac{D_A \times 1000}{206265}.$$
 
 ### Python implementation
 
