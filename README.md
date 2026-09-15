@@ -97,3 +97,14 @@ Re_kpc = Re_arcsec * kpc_per_arcsec
 ```
 
 The same procedure can be used for the exponential scale radius `Rs`.
+
+## GALFIT problematic cases
+
+The `GALFIT_problematic_cases` directory contains the Pan-STARRS images and corresponding GALFIT residuals for host galaxies affected by fitting or image-quality difficulties during the structural analysis.
+
+These images are provided as supplementary quality-control material, allowing the problematic cases discussed in the manuscript to be inspected directly. The directory therefore does not contain images for every TDE host in the sample, but only for sources for which the structural modelling was affected by issues such as unreliable fits, insufficient host-galaxy signal or mosaic/frame discontinuities.
+For each source, the original Pan-STARRS image and the residual obtained from a final GALFIT model attempted are provided.
+
+When the same source was affected by the same problem in both the `g` and `r` bands, only the `r`-band image and residual are shown. The `r` band was preferred because it generally provides a brighter and higher-S/N representation of the host-galaxy morphology in our sample.
+
+The reason associated with each problematic case is indicated by the corresponding folder name. The full list of excluded sources and their exclusion criteria is provided in `Excluded_TDEs.csv`.
