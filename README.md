@@ -51,7 +51,7 @@ $$
 
 To convert the angular radius to a physical radius in kpc, we use the angular-diameter distance at the redshift of each host.
 
-We adopt a flat $\Lambda$CDM cosmology with
+We adopt a flat ΛCDM cosmology with
 
 $$
 H_0 = 70\ \mathrm{km\ s^{-1}\ Mpc^{-1}},
